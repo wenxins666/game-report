@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GamePulse | W21 手游周报 · 品类进化周 · 放置修仙</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #475569;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 16px; }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        /* Section */
+        .section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .section-header:hover { background: var(--bg-hover); }
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .section-icon.red { background: rgba(239, 68, 68, 0.2); }
+        .section-icon.orange { background: rgba(245, 158, 11, 0.2); }
+        .section-icon.green { background: rgba(16, 185, 129, 0.2); }
+        .section-icon.blue { background: rgba(59, 130, 246, 0.2); }
+        .section-icon.purple { background: rgba(139, 92, 246, 0.2); }
+        .section-icon.cyan { background: rgba(6, 182, 212, 0.2); }
+        .section-icon.pink { background: rgba(236, 72, 153, 0.2); }
+        .section-title {
+            flex: 1;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .section-arrow {
+            color: var(--text-secondary);
+            transition: transform 0.3s;
+        }
+        .section.collapsed .section-arrow { transform: rotate(-90deg); }
+        .section.collapsed .section-body { display: none; }
+        .section-body { padding: 0 16px 16px; }
+        
+        /* Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .stat-card .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .stat-card .value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .stat-card .value.up { color: var(--success); }
+        .stat-card .value.down { color: var(--danger); }
+        .stat-card .value.neutral { color: var(--warning); }
+        .stat-card .sub {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin: 12px 0;
+        }
+        th, td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 11px;
+        }
+        td { font-size: 12px; }
+        .rank { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+        .rank.gold { background: rgba(234, 179, 8, 0.3); color: #fbbf24; }
+        .rank.silver { background: rgba(148, 163, 184, 0.3); color: #94a3b8; }
+        .rank.bronze { background: rgba(180, 83, 9, 0.3); color: #d97706; }
+        
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .tag.red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .tag.green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .tag.orange { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .tag.blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+        .tag.purple { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+        .tag.pink { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+        
+        /* Source */
+        .source {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .source a {
+            color: var(--info);
+            text-decoration: none;
+        }
+        
+        /* Sub-title */
+        .sub-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 16px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .emoji { font-size: 14px; }
+        
+        /* Alert */
+        .alert {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 12px;
+        }
+        .alert-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .alert-box .icon { font-size: 16px; }
+        .alert-box .content .title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        /* Product Card */
+        .product-card {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .product-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .product-card .name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .product-card .developer {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .product-card .data {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        .product-card .data span {
+            color: var(--text-secondary);
+        }
+        
+        /* Company Product */
+        .company-product {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .company-product .label {
+            font-size: 10px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .company-product .name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .company-product .type {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .company-product .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .company-product .feature {
+            background: rgba(99, 102, 241, 0.3);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+        
+        @media (max-width: 480px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            table { font-size: 11px; }
+            th, td { padding: 8px 4px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-badge">📅 W21 · 2026.05.18 - 05.24</div>
+            <h1>🧬 品类进化周 · 放置修仙</h1>
+            <div class="header-meta">
+                <span>📊 52期</span>
+                <span>📅 2026-05-21</span>
+                <span>🏷️ 第1轮W5</span>
+            </div>
+        </div>
+        
+        <!-- 公司产品 -->
+        <div class="company-product">
+            <div class="label">🏢 我司产品线</div>
+            <div class="name">《大道仙途》</div>
+            <div class="type">放置模拟 · 放置养成修仙手游</div>
+            <div class="features">
+                <span class="feature">修仙题材</span>
+                <span class="feature">放置挂机</span>
+                <span class="feature">角色养成</span>
+                <span class="feature">门派经营</span>
+            </div>
+        </div>
+        
+        <!-- 行业概览 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon blue">📊</div>
+                <div class="section-title">本周行业概览</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="label">iOS游戏畅销榜TOP10</div>
+                        <div class="value">王者荣耀稳居榜首</div>
+                        <div class="sub">TOP10门槛维持稳定</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">本周增量冠军</div>
+                        <div class="value up">▲ +32%</div>
+                        <div class="sub">三角洲行动</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">新晋黑马</div>
+                        <div class="value up">▲ +329%</div>
+                        <div class="sub">绝区零2.5版</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">放置修仙热度</div>
+                        <div class="value neutral">修仙+肉鸽</div>
+                        <div class="sub">5月热门品类</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 品类规模 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon blue">📊</div>
+                <div class="section-title">一、品类规模与增长</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div class="sub-title"><span class="emoji">🎯</span> 放置修仙品类关键指标</div>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="label">品类代表产品</div>
+                        <div class="value">一念逍遥</div>
+                        <div class="sub">累计下载2.3亿+，月流水1.8亿+</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">品类MAU规模</div>
+                        <div class="value">2.5亿+</div>
+                        <div class="sub">放置修仙+仙侠MMO合计</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">头部产品增速</div>
+                        <div class="value up">▲ +128%</div>
+                        <div class="sub">一念逍遥新版本后环比</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">中腰部下滑</div>
+                        <div class="value down">▼ -70%</div>
+                        <div class="sub">寻道大千从峰值7亿→1亿</div>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">📉</span> 品类趋势分析</div>
+                <div class="alert">
+                    <div class="alert-box">
+                        <div class="icon">⚠️</div>
+                        <div class="content">
+                            <div class="title">品类内部分化加剧</div>
+                            <p>头部产品《一念逍遥》凭借版本更新流水暴涨128%，而《寻道大千》从巅峰月流水7亿滑落至3000万级别，品类呈现"强者恒强、弱者加速出局"的马太效应。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">🔍</span> 市场规模估算</div>
+                <table>
+                    <tr><th>细分品类</th><th>年市场规模</th><th>增速</th><th>代表产品</th></tr>
+                    <tr><td>放置修仙（狭义）</td><td>80-100亿</td><td class="tag green">→ 平稳</td><td>一念逍遥、无极仙途</td></tr>
+                    <tr><td>仙侠MMO（放置元素）</td><td>150-200亿</td><td class="tag green">▲ 增长</td><td>诛仙2、凡人修仙传</td></tr>
+                    <tr><td>小游戏修仙（轻度）</td><td>50-80亿</td><td class="tag red">▼ 萎缩</td><td>寻道大千、巨兽战场</td></tr>
+                    <tr><td>修仙+融合（新品）</td><td>待定</td><td class="tag blue">▲ 新兴</td><td>宗师之上、遮天</td></tr>
+                </table>
+                
+                <div class="source">数据来源：<a href="https://m.wandoujia.com/strategy/11222854436633336978.html" target="_blank">极光研究院</a>、<a href="https://www.taptap.cn/app/380356/topic?page=64&tab_name=forum" target="_blank">TapTap官方论坛</a>、<a href="http://m.toutiao.com/group/7638516891492844084/?upstream_biz=VolcEngine" target="_blank">游戏陀螺</a></div>
+            </div>
+        </div>
+        
+        <!-- 头部产品分析 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon red">🏆</div>
+                <div class="section-title">二、头部产品深度分析</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div class="sub-title"><span class="emoji">👑</span> 一念逍遥 - 品类天花板</div>
+                <div class="product-card">
+                    <div class="header">
+                        <div>
+                            <div class="name">一念逍遥</div>
+                            <div class="developer">吉比特 · 放置修仙第一</div>
+                        </div>
+                        <span class="tag green">TOP1</span>
+                    </div>
+                    <div class="data">
+                        <div><span>累计下载：</span>2.3亿+</div>
+                        <div><span>月均流水：</span>1.8亿+</div>
+                    </div>
+                    <div class="data">
+                        <div><span>30日留存：</span>28.9%</div>
+                        <div><span>90日留存：</span>49.2%</div>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;">
+                        <span class="tag blue">2026年4月新版本"仙崽梦园"上线</span>
+                        <span class="tag green">流水环比暴涨128%</span>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">📉</span> 寻道大千 - 品类衰退样本</div>
+                <div class="product-card">
+                    <div class="header">
+                        <div>
+                            <div class="name">寻道大千</div>
+                            <div class="developer">三七互娱 · 小游戏标杆</div>
+                        </div>
+                        <span class="tag orange">下滑中</span>
+                    </div>
+                    <div class="data">
+                        <div><span>巅峰月流水：</span>7亿+</div>
+                        <div><span>当前月流水：</span>3000万</div>
+                    </div>
+                    <div class="data">
+                        <div><span>微信畅销榜：</span>20-30名</div>
+                        <div><span>下滑幅度：</span>约-70%</div>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;">
+                        <span class="tag red">从巅峰到衰退约3年</span>
+                        <span class="tag orange">买量驱动型产品的典型困境</span>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">🆕</span> 5月新品观察</div>
+                <div class="product-card">
+                    <div class="header">
+                        <div>
+                            <div class="name">宗师之上</div>
+                            <div class="developer">灵犀互娱</div>
+                        </div>
+                        <span class="tag blue">新游</span>
+                    </div>
+                    <div style="font-size:12px;margin-top:8px;">
+                        <p>5月20日上线，踩中修仙放置热潮，主打"离线飞升、上线收割"理念，融合水墨国风与功法合成、法宝炼化等要素。</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="header">
+                        <div>
+                            <div class="name">遮天：帝路争锋</div>
+                            <div class="developer">斑马游戏</div>
+                        </div>
+                        <span class="tag blue">新游</span>
+                    </div>
+                    <div style="font-size:12px;margin-top:8px;">
+                        <p>5月13日上线，群像修仙卡牌手游，以《遮天》动画正版授权，还原北斗星域群雄逐鹿格局。</p>
+                    </div>
+                </div>
+                
+                <div class="source">数据来源：<a href="https://m.00791.com/youxizixun/13832.html" target="_blank">00791下载站</a>、<a href="https://www.taptap.cn/app/380356/topic?page=64&tab_name=forum" target="_blank">TapTap官方论坛</a>、<a href="http://news.17173.com/content/05142026/105120512.shtml" target="_blank">17173</a></div>
+            </div>
+        </div>
+        
+        <!-- 品类创新方向 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon green">💡</div>
+                <div class="section-title">三、品类创新方向</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div class="sub-title"><span class="emoji">🔄</span> 创新方向矩阵</div>
+                <table>
+                    <tr><th>创新方向</th><th>代表产品</th><th>创新点</th><th>效果</th></tr>
+                    <tr>
+                        <td>版本内容迭代</td>
+                        <td>一念逍遥</td>
+                        <td>灵兽养成、仙侣共育</td>
+                        <td class="tag green">流水+128%</td>
+                    </tr>
+                    <tr>
+                        <td>IP联动</td>
+                        <td>寻道大千×僵尸先生</td>
+                        <td>黄符镇邪、茅山正道</td>
+                        <td class="tag orange">短期拉新</td>
+                    </tr>
+                    <tr>
+                        <td>修仙+卡牌融合</td>
+                        <td>遮天：帝路争锋</td>
+                        <td>群像修仙+策略卡牌</td>
+                        <td class="tag blue">待观察</td>
+                    </tr>
+                    <tr>
+                        <td>放置+重度MMO</td>
+                        <td>诛仙2</td>
+                        <td>无缝大地图+轻度日常</td>
+                        <td class="tag green">稳定</td>
+                    </tr>
+                </table>
+                
+                <div class="sub-title"><span class="emoji">⚠️</span> 创新瓶颈分析</div>
+                <div class="alert">
+                    <div class="alert-box">
+                        <div class="icon">⚠️</div>
+                        <div class="content">
+                            <div class="title">品类创新三大困境</div>
+                            <p>1. <strong>同质化严重：</strong>境界突破、炼丹炼器、法宝系统高度雷同<br>
+                            2. <strong>数值天花板：</strong>境界压制导致新手入坑门槛持续提高<br>
+                            3. <strong>社交深度不足：</strong>多数产品停留于宗门战、跨服战，缺少深度MMO体验</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">🚀</span> 潜在突破方向</div>
+                <table>
+                    <tr><th>方向</th><th>描述</th><th>难度</th></tr>
+                    <tr><td>放置+开放世界</td><td>无缝大地图探索，离线同步进度</td><td class="tag orange">高</td></tr>
+                    <tr><td>放置+社交VR</td><td>仙盟社交、跨服论道沉浸化</td><td class="tag red">极高</td></tr>
+                    <tr><td>放置+AI生成</td><td>AI生成剧情、NPC互动</td><td class="tag blue">中</td></tr>
+                    <tr><td>放置+小游戏融合</td><td>竖屏单手、副本随机事件</td><td class="tag green">低</td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 用户画像变化 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon purple">👥</div>
+                <div class="section-title">四、用户画像变化</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div class="sub-title"><span class="emoji">📊</span> 核心用户数据</div>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="label">一念逍遥日活</div>
+                        <div class="value">150万+</div>
+                        <div class="sub">峰值DAU</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">平均在线时长</div>
+                        <div class="value">68分钟</div>
+                        <div class="sub">日均</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">年轻化趋势</div>
+                        <div class="value up">▲ 25岁以下↑</div>
+                        <div class="sub">诛仙2受众明显更年轻</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">女性用户</div>
+                        <div class="value up">▲ +15%</div>
+                        <div class="sub">古风审美吸引女性</div>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">🎭</span> 用户需求变迁</div>
+                <table>
+                    <tr><th>时期</th><th>用户需求</th><th>代表产品</th></tr>
+                    <tr><td>2019-2021</td><td>重肝重氪、排行榜攀比</td><td>早期放置修仙</td></tr>
+                    <tr><td>2022-2024</td><td>减负、零氪友好</td><td>寻道大千崛起</td></tr>
+                    <tr><td>2025-至今</td><td>省心+内容深度</td><td>一念逍遥版本迭代</td></tr>
+                </table>
+                
+                <div class="sub-title"><span class="emoji">💰</span> 付费模式演变</div>
+                <div class="alert">
+                    <div class="alert-box">
+                        <div class="icon">💡</div>
+                        <div class="content">
+                            <div class="title">从"氪金霸服"到"零氪体验"</div>
+                            <p>一念逍遥：无VIP特权、无强制氪金，零氪满境界、微氪有体验、重氪有追求<br>
+                            寻道大千：月卡解锁挂机、免费途径获取武将，付费深度明显降低</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="source">数据来源：<a href="https://m.00791.com/youxizixun/13832.html" target="_blank">00791下载站</a>、<a href="http://m.toutiao.com/group/7639952803036791315/?upstream_biz=VolcEngine" target="_blank">手游那事</a></div>
+            </div>
+        </div>
+        
+        <!-- 进入机会评估 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon cyan">🚀</div>
+                <div class="section-title">五、进入机会评估 & 对《大道仙途》建议</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div class="sub-title"><span class="emoji">🎯</span> 品类四象限评估（增速 vs 规模）</div>
+                <table>
+                    <tr><th>细分赛道</th><th>市场规模</th><th>增速</th><th>竞争强度</th><th>差异化空间</th></tr>
+                    <tr><td>放置修仙（狭义）</td><td>★★★★</td><td>→ 平稳</td><td>高</td><td>★★☆</td></tr>
+                    <tr><td>仙侠MMO（放置化）</td><td>★★★★★</td><td>▲ 增长</td><td>极高</td><td>★☆☆</td></tr>
+                    <tr><td>修仙卡牌融合</td><td>★★☆</td><td>▲ 爆发</td><td>中</td><td>★★★★</td></tr>
+                    <tr><td>小游戏修仙</td><td>★★★</td><td>▼ 萎缩</td><td>中高</td><td>★★★</td></tr>
+                </table>
+                
+                <div class="sub-title"><span class="emoji">⚠️</span> 品类核心风险</div>
+                <div class="alert">
+                    <div class="alert-box">
+                        <div class="icon">🚨</div>
+                        <div class="content">
+                            <div class="title">品类萎缩的三大信号</div>
+                            <p>1. <strong>用户热情消退：</strong>寻道大千3年从巅峰到衰退，靠买量的产品不可持续<br>
+                            2. <strong>创新乏力：</strong>境界压制、数值膨胀的老路难以打破<br>
+                            3. <strong>新品转化差：</strong>2025-2026新品除宗师之外缺乏爆款</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">💡</span> 对《大道仙途》产品建议</div>
+                <div class="alert">
+                    <div class="alert-box">
+                        <div class="icon">🎯</div>
+                        <div class="content">
+                            <div class="title">三条差异化路径</div>
+                            <p><strong>路径一（轻量化）：</strong>修仙+休闲小游戏融合，竖屏单手、副本随机事件，降低入坑门槛<br>
+                            <strong>路径二（深度化）：</strong>放置+开放世界，探索+收集+社交，参考诛仙2模式<br>
+                            <strong>路径三（门派经营）：</strong>强化门派经营自由度，弟子养成+资源调度+风水布局，参考《了不起的修仙模拟器》</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sub-title"><span class="emoji">📋</span> 《大道仙途》核心竞品对比</div>
+                <table>
+                    <tr><th>我司产品</th><th>核心优势</th><th>需补足</th><th>参考标杆</th></tr>
+                    <tr>
+                        <td>大道仙途</td>
+                        <td>门派经营+角色养成</td>
+                        <td>品类认知、用户基础</td>
+                        <td>一念逍遥、寻道大千</td>
+                    </tr>
+                </table>
+                
+                <div class="sub-title"><span class="emoji">⏰</span> 结论</div>
+                <p style="font-size:12px;color:var(--text-secondary);">
+                    放置修仙品类整体进入<strong style="color:var(--warning)">成熟期后半段</strong>，头部集中加剧，中腰部加速出局。
+                    新进入者建议聚焦<strong style="color:var(--success)">门派经营差异化</strong>或<strong style="color:var(--success)">修仙+融合创新</strong>赛道，
+                    避免与传统放置修仙直接竞争。《大道仙途》应强化"门派经营"+"放置挂机"双核玩法，形成独特产品定位。
+                </p>
+            </div>
+        </div>
+        
+        <!-- 趋势信号 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon orange">📡</div>
+                <div class="section-title">📡 趋势信号追踪表</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <table>
+                    <tr><th>信号</th><th>来源</th><th>时间</th><th>置信度</th></tr>
+                    <tr>
+                        <td><span class="tag red">危险</span> 寻道大千从7亿→1亿</td>
+                        <td>TapTap论坛</td>
+                        <td>2026.05</td>
+                        <td class="tag red">高</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag green">机会</span> 一念逍遥版本迭代+128%</td>
+                        <td>行业监测</td>
+                        <td>2026.04</td>
+                        <td class="tag green">高</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag orange">观察</span> 修仙放置+肉鸽卡牌成为5月热点</td>
+                        <td>游戏陀螺</td>
+                        <td>2026.05</td>
+                        <td class="tag orange">中</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag blue">新兴</span> 灵犀互娱宗师之上定档5.20</td>
+                        <td>官方公告</td>
+                        <td>2026.05</td>
+                        <td class="tag blue">高</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag red">危险</span> 品类同质化严重、创新乏力</td>
+                        <td>行业观察</td>
+                        <td>2026.05</td>
+                        <td class="tag red">高</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 下周预告 -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <div class="section-icon blue">🔮</div>
+                <div class="section-title">🔮 下周预告</div>
+                <div class="section-arrow">▼</div>
+            </div>
+            <div class="section-body">
+                <div style="text-align:center;padding:20px;">
+                    <div style="font-size:32px;margin-bottom:12px;">🏢</div>
+                    <div style="font-size:18px;font-weight:600;">W22 · 大厂动向周</div>
+                    <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
+                        追踪腾讯、网易、米哈游、灵犀互娱等大厂产品线动态
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>GamePulse 手游行业周报 · W21</p>
+            <p style="margin-top:4px;">数据来源：行业公开数据 · 仅供参考</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('collapsed');
+        }
+        
+        document.querySelectorAll('.section').forEach((section, index) => {
+            if (index > 2) section.classList.add('collapsed');
+        });
+    </script>
+</body>
+</html>
